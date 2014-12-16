@@ -1,4 +1,15 @@
+// Require Twitter API 
 var Twit = require ('twit');
+
+// Require AlchemyAPI
+var AlchemyAPI = require('./alchemyapi');
+var alchemyapi = new AlchemyAPI();
+
+// Test Sentiment analysis via Alchemy
+var myText = "Whoa, AlchemyAPI's Node.js SDK is really great, I can't wait to build my app!";
+alchemyapi.sentiment("text", myText, {}, function(response) {
+console.log("Sentiment: " + response["docSentiment"]["type"]);
+});
 		
 // Twitter API Access Tokens
 var T = new Twit({
