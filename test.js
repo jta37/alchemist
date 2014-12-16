@@ -1,8 +1,5 @@
-// require node modules & load controllers
-var express = require ('express'),
-		Twit = require ('twit'),
-		app = express();
-
+var Twit = require ('twit');
+		
 // Twitter API Access Tokens
 var T = new Twit({
     consumer_key:         process.env.CONSUMER_KEY
@@ -13,21 +10,5 @@ var T = new Twit({
 
 T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(err, data, response) {
   console.log(data);
-  console.log(typeof data);
-});
-
-// set view engine to ejs
-app.set('view engine', 'ejs');
-
-
-app.get("/", function(req,res) {
-	res.render('index');
-})
-
-app.get("/search", function(req,res) {
-
-});
-
-app.listen(3000, function (){
-	console.log("Visit localhost:3000")
+  console.log(typeof);
 });
