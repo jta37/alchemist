@@ -1,6 +1,7 @@
 // require node modules & load controllers
 var express = require ('express'),
 		Twit = require ('twit'),
+		bodyParser = require ('body-parser'),
 		app = express();
 
 // Twitter API Access Tokens
