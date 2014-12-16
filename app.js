@@ -16,6 +16,10 @@ T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(er
   console.log(typeof data);
 });
 
+T.get('statuses/user_timeline', { user_id: 'shrewd_drews', count: 100 }, function (err, data, response) {
+	console.log(data);
+});
+
 // set view engine to ejs
 app.set('view engine', 'ejs');
 

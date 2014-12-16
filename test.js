@@ -9,6 +9,10 @@ var T = new Twit({
 });
 
 T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(err, data, response) {
-  console.log(data);
-  console.log(typeof);
+  //console.log(data);
+  //console.log(typeof data);
+});
+
+T.get('statuses/user_timeline', { user_id: 'shrewd_drews', count: 100 }, function (err, data, response) {
+	console.log(data);
 });
