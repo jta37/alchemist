@@ -29,9 +29,16 @@ app.get("/", function(req,res) {
 	res.render('index');
 })
 
+
+app.get("/search/:searchTerm", function (req, res) {
+
+});
+
+
 app.get("/results", function(req,res) {
 	res.render('results');
 });
+
 
 app.listen(3000, function (){
 	console.log("Visit localhost:3000")
