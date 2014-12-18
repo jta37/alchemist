@@ -30,3 +30,6 @@ node_modules/*
 
 # AlchemyAPI key
 api_key.txt
+
+# Twitter Keys
+twitter_keys.txt

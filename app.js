@@ -64,13 +64,59 @@ app.get('/test', function(req, res){
 	});
 })
 
-app.get('/search/:user_id', function (req, res) {
-	T.get('statuses/user_timeline', { user_id: ':user_id', count: 50 }, function (err, data, response) {
-		//res.send(':user_id')
-		if (!error && response.statusCode == 200) {
-		res.redirect('results', { tweetList: user_id });
-	})
+// THIS ONE WORKS!!!!!!!!!!!
+app.get('/idk/:user_id', function(req, res){
+	var userId = req.params.user_id;
+	console.log(userId);
+	T.get('statuses/user_timeline', { screen_name: userId, count: 100 }, function (err, data, response) {
+	console.log(data[0].text);
+
+	var tweets = [];
+
+/// NOT ASYNCHORONOUS BAD... BAD.
+// SWAP OUT _ for async NOT YET... EVENTUALLY
+	_.each(data, function(t) {
+		tweets.push(t.text);
+	});
+	console.log(tweets);
+	res.render('test', {tweets: tweets});
+	});
 })
+
+//http://localhost:3000/results?tweets[username]=mjdesa
+app.get('/results', function(req, res){
+	var userId = req.query.tweets.username;
+	console.log(userId);
+	T.get('statuses/user_timeline', { screen_name: userId, count: 100 }, function (err, data, response) {
+	
+
+
+
+	var tweets = [];
+
+/// NOT ASYNCHORONOUS BAD... BAD.
+// SWAP OUT _ for async NOT YET... EVENTUALLY
+	_.each(data, function(t) {
+		tweets.push(t.text);
+	});
+	console.log(tweets);
+	res.render('results', {tweets: tweets});
+	});
+})
+
+// app.get('/search/:user_id', function (req, res) {
+// 	var userId = req.params.user_id;
+// 	T.get('statuses/user_timeline', { screen_name: userId, count: 50 }, function (err, data, response) {
+// 		//res.send(':user_id')
+// 		if (!err && response.statusCode == 200) {
+
+// 			this.twit.get(req.params.id)
+// 					.then( function (user_id) {
+// 						res.render('results', { tweetList: userId });		
+// 			});	
+// 		}
+// 	})
+// })
 
 
 
@@ -95,6 +141,11 @@ var alchemyapi = new AlchemyAPI();
 // });
 
 
-app.listen(3000, function (){
-	console.log("Visit localhost:3000")
+// app.listen(3000, function (){
+// 	console.log("Visit localhost:3000")
+// });
+
+app.listen(process.env.PORT || 3000, function () {
+	console.log("LISTENING");
 });
+
