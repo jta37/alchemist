@@ -1,9 +1,14 @@
 // require node modules & load controllers
 var express = require ('express'),
 		request = require ('request'),
-		Twit = require ('twit'),
 		bodyParser = require ('body-parser'),
 		app = express();
+
+// Require Underscore.js 
+var _ = require('underscore');
+
+// Require Twitter API Client for Node
+var Twit = require ('twit');
 
 // Twitter API Access Tokens
 var T = new Twit({
@@ -27,6 +32,7 @@ var T = new Twit({
 
 
 app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 // set view engine to ejs
@@ -36,6 +42,11 @@ app.set('view engine', 'ejs');
 app.get("/", function(req,res) {
 	res.render('index');
 })
+
+app.get("/search/new", function (req, res) {
+	res.render("search/new");
+})
+// Render user_timeline tweets at /test 
 
 app.get('/test', function(req, res){
 	T.get('statuses/user_timeline', { user_id: 'shrewd_drews', count: 100 }, function (err, data, response) {
@@ -50,7 +61,15 @@ app.get('/test', function(req, res){
 	});
 	console.log(tweets);
 	res.render('test', {tweets: tweets});
-});
+	});
+})
+
+app.get('/search/:user_id', function (req, res) {
+	T.get('statuses/user_timeline', { user_id: ':user_id', count: 50 }, function (err, data, response) {
+		//res.send(':user_id')
+		if (!error && response.statusCode == 200) {
+		res.redirect('results', { tweetList: user_id });
+	})
 })
 
 
@@ -59,9 +78,6 @@ app.get("/results", function(req,res) {
 	res.render('results');
 });
 
-// Require Twitter API 
-var Twit = require ('twit');
-var _ = require('underscore');
 
 // Require AlchemyAPI
 var AlchemyAPI = require('./alchemyapi');

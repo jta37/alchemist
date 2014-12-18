@@ -4,6 +4,13 @@
 	<title>Alchemist App</title>
 </head>
 <body>
-
+	<% tweetList.forEach(function(tweet) { %>
+<div>
+  <a href="/tweets/<%= user_id %>"><%= tweets %></a>
+  <div>
+    <%= tweets %>
+  </div>
+</div>
+<% }) %>
 </body>
 </html>

@@ -23,16 +23,34 @@ var T = new Twit({
 
 // Pseudocode Structure 
 
-T.get('search/tweets', {q: '...', count: 100}, function (err, data, res) {
+// T.get('search/tweets', {q: '...', count: 100}, function (err, data, res) {
+
+// 	var t_results = JSON.parse(data);
+// 	alchemyapi.keywords("...", ..., ..., fuction (response) {
+// 		console.log(" Put your output here. ");
+// 	})
+// })
+
+T.get('search/tweets', {q: 'startups since:2014-08-10', count: 50}, function (err, data, res) {
 
 	var t_results = JSON.parse(data);
-	alchemyapi.yadayada("...", ..., ..., fuction (response) {
+
+	alchemyapi.keywords("text", t_results, {}, function (response) {
 		console.log(" Put your output here. ");
+		output['keywords'] = {data:tweets, response:JSON.stringify(response, null, 4), results:response['keywords'] };
+		concepts(req, res, output);
 	})
+});
 
+alchemy.category('<URL|HTML|TEXT>', {}, function(err, response) {
+  if (err) throw err;
 
+  // See http://www.alchemyapi.com/api/categ/htmlc.html for format of returned object
+  var category = response.category;
 
-})
+  // Do something with data
+});
+
 
 // T.get('search/tweets', { q: 'banana since:2011-11-11', count: 1 }, function(err, data, response) {
 //   //console.log(data);
