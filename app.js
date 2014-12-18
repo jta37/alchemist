@@ -2,7 +2,11 @@
 var express = require ('express'),
 		request = require ('request'),
 		bodyParser = require ('body-parser'),
+		sequelize = require ('sequelize'),
+		pg = require ('pg'),
 		app = express();
+
+		
 var config = require(__dirname + '/../config/config.json')[env];
 // NEEDED FOR HEROKU ///////////
 if(config.use_env_variable){
@@ -17,8 +21,7 @@ if(config.use_env_variable){
 //////////////////////////////
 
 
-// var sequelize = new Sequelize(config.database, config.username, config.password, config)
-// var db 				= {};
+var db = require("./models");
 
 
 // Require Underscore.js 
