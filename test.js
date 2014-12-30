@@ -2,6 +2,8 @@
 var Twit = require ('twit');
 var _ = require('underscore');
 
+var bodyParser = require('body-parser');
+
 // Require AlchemyAPI
 var AlchemyAPI = require('./alchemyapi');
 var alchemyapi = new AlchemyAPI();

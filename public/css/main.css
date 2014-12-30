@@ -97,6 +97,9 @@ a:after {
 	padding-bottom: 0px;
 }
 
+.btn-tweets {
+
+}
 .btn-theme {
 	color: #ffffff;
 	background-color: #74cfae;
@@ -155,6 +158,9 @@ a:after {
 	font-size: 20px;
 }
 
+#navigate {
+
+}
 /* Skills */
 #skills {
 	background-color: #4e4e4e;

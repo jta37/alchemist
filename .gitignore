@@ -32,4 +32,5 @@ node_modules/*
 api_key.txt
 
 # Twitter Keys
-twitter_keys.txt
+**/twitter_keys.txt
+**/config.js
