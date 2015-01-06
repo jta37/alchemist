@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Query Twitter REST API for user timelines and associated data. We pipe data to the Alchemy API for sentiment analysis, and return categorically filtered information. Twitter Siftin' with The Alchemist App.">
+    <meta name="description" content="">
     <meta name="author" content="">
 
     <title>Alchemist</title>
@@ -28,6 +28,20 @@
     <![endif]-->
   </head>
   <body>
+    <header>
+      <% include ../layouts/header.ejs %>
+    </header>
+
+    <div id="hello">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 centered">
+            <h1>The Alchemist</h1>
+            <h2>Twitter Siftin'</h2>
+          </div><!-- /col-lg-8 -->
+        </div><!-- /row -->
+      </div> <!-- /container -->
+    </div><!-- /hello -->
     <h1>Data Alchemist</h1>
     <form method="GET" action="/results">
       <input type="text" name="tweets[username]" placeholder="Search by Twitter Handle"><br />

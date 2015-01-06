@@ -9,8 +9,6 @@ var AlchemyAPI = require('./alchemyapi');
 var alchemyapi = new AlchemyAPI();
 
 
-var testUrl = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2'
-
 // var analysisChain = function alchemist(req, res) {
 // 	var output = {};
 
@@ -49,47 +47,69 @@ var T = new Twit({
 // 	})
 // })
 
+var context = {};
+
 
 
 T.get('statuses/user_timeline', { user_id: 'shrewd_drews', count: 30 }, function (err, data, response) {
 	console.log(data[0].text);
 
-	var tweets = [];
+	var tweet_objects = [];
+	var tweet_text_blob = "";
 
 	_.each(data, function(t) {
-		tweets.push(t.text);
+		tweet_objects.push(t);
+		tweet_text_blob += " " + t.text;
 	});
 	// console.log(tweets);
 
-	alchemyapi.sentiment("text", tweets, {'sentiment':1}, function(response) {
-	console.log("Sentiment " + response["docSentiment"]["type"]);
-	});
+	// alchemyapi.sentiment("text", tweets, {'sentiment':1}, function(response) {
+	// console.log("Sentiment " + response["docSentiment"]["type"]);
+	// });
 
-		var output = {};
+	// var output = {};
 
-		alchemyapi.entities('text', tweets,{ 'sentiment':1 }, function(response) {
-			output['entities'] = { text:tweets, response:JSON.stringify(response,null,4), results:response['entities'] };
-			// console.log("Entities " + response['entities']['type'])
+	alchemyapi.entities('text', tweet_text_blob, { 'sentiment':1 }, function(response) {
+		// output.entities = { text:tweets, response:JSON.stringify(response,null,4), results:response['entities'] };
 
-			// console.log(response.entities)
-			// response.entities --> entity results
-			var entities = response.entities;
-			console.log(entities);
+		// var t_entities = [];
 
-			// Response type --> object
-			// console.log(typeof entities)
+		// console.log(response.entities)
+		// response.entities --> entity results
+		var t_entities = response.entities;
+		// console.log(response)
+
+		// _.each(response, function(e) {
+		// 	t_entities.push(entities)
+		// });
+		console.log(t_entities);
+
 
 			// console.log(entities.response)
 
 			// console.log(output)
 
-			// console.log({entities: response['type']})
-
-			// console.log({output: response.sentiment})
-			var entityTypes = response.entities.type;
+			// var entityTypes = response.entities.type;
 			// console.log(entityTypes);
 		});
 });
+
+
+		// entities[0] output shown below
+		// console.log(entities[0]);
+
+			//{ type: 'Person',
+		  // relevance: '0.796034',
+		  // sentiment: { type: 'negative', score: '-0.418119' },
+		  // count: '3',
+		  // text: 'Steve Downie',
+		  // disambiguated: 
+		  //  { subType: [ 'Athlete', 'HockeyPlayer' ],
+		  //    name: 'Steve Downie',
+		  //    dbpedia: 'http://dbpedia.org/resource/Steve_Downie',
+		  //    freebase: 'http://rdf.freebase.com/ns/m.09rkgm',
+		  //    yago: 'http://yago-knowledge.org/resource/Steve_Downie' } }
+
 
 // alchemyapi.sentiment("text", tweets, {}, function(response) {
 // 	console.log("Sentiment" + response["docSentiment"]);
@@ -98,24 +118,6 @@ T.get('statuses/user_timeline', { user_id: 'shrewd_drews', count: 30 }, function
 // alchemyapi.concepts("text", tweets, {'linkedData':1}, function(response) {
 // 	console.log("Concepts " + response["concepts"]["type"]);
 // })
-
-	// Set a url for AlchemyAPI analysis
-	// var testUrl = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=10'
-	// alchemyapi.entities("url", testUrl, { 'sentiment':1, 'maxRetrieve':30 }, function(response) {
-	// 	response['entities'] = { url:testUrl, response:JSON.stringify(response,null,4), results:response['entities'] };
-
-	// 	// store entity analysis response
-	// 	var entityExtract = response.entities;
-	// 	console.log(entityExtract)
-	// 	var entityType = response.entities.type;
-	// 	console.log(entityType)
-	// 	var tweetEntities = [];
-
-	// 	_.each(response, function(e) {
-	// 		tweetEntities.push(e.url);
-	// 	});
-	// console.log("Entities: " + tweetEntities);
-	// });
 
 
 

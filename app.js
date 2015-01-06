@@ -24,8 +24,9 @@ var express = require ('express'),
 var db = require("./models");
 
 
-// Require Underscore.js 
+// Require Underscore.js & ASync
 var _ = require('underscore');
+var async = require('async');
 
 // Require Twitter API Client for Node
 var Twit = require ('twit');
@@ -37,6 +38,10 @@ var T = new Twit({
   , access_token:         process.env.ACCESS_TOKEN
   , access_token_secret:  process.env.ACCESS_TOKEN_SECRET
 });
+
+// Require AlchemyAPI
+var AlchemyAPI = require('./alchemyapi');
+var alchemyapi = new AlchemyAPI();
 
 
 app.use(express.static(__dirname + "/public"));
@@ -55,43 +60,65 @@ app.get("/search/new", function (req, res) {
 	res.render("search/new");
 })
 
-// Render user_timeline tweets at /test 
-
-app.get('/test', function(req, res){
-	T.get('statuses/user_timeline', { user_id: 'shrewd_drews', count: 100 }, function (err, data, response) {
-	console.log(data[0].text);
-
-	var tweets = [];
-
-/// NOT ASYNCHORONOUS BAD... BAD.
-// SWAP OUT _ for async NOT YET... EVENTUALLY
-	_.each(data, function(t) {
-		tweets.push(t.text);
-	});
-	console.log(tweets);
-	res.render('test', {tweets: tweets});
-	});
-})
-
 // THIS ONE WORKS!!!!!!!!!!!
-app.get('/idk/:user_id', function(req, res){
+// app.get('/idk/:user_id', function(req, res){
+// 	// Set twitter params to userId
+// 	var userId = req.params.user_id;
+// 	// console.log(userId);
+// 	T.get('statuses/user_timeline', { screen_name: userId, count: 100 }, function (err, data, response) {
+// 	// console.log(data[0].text);
+
+// 	var tweets = [];
+
+// 	_.each(data, function(t) {
+// 		tweets.push(t.text);
+// 	});
+// 	console.log(tweets);
+// 	res.render('test', {tweets: tweets});
+// 	});
+// })
+
+var getTweets = function(twitter_user, callback){
+	T.get('statuses/user_timeline', { screen_name: 'jmj', count: 50 }, function (err, data, response) {
+		var context = {};
+		context.tweets = [];
+		// context.tweet_text_blob = "";
+		_.each(data, function(t) {
+			context.tweets.push(t.text);
+		});
+		callback(null, context);
+	});
+};
+
+var runAnalysis = function(context, callback) {
+	// console.log(text);
+	alchemyapi.entities('text', context.tweets, { 'sentiment': 1 }, function(response) {
+		context.entities = response.entities;
+		callback(null, context);
+	});
+};
+
+app.get('/test/:user_id', function(req, res) {
 	// Set twitter params to userId
 	var userId = req.params.user_id;
-	// console.log(userId);
-	T.get('statuses/user_timeline', { screen_name: userId, count: 100 }, function (err, data, response) {
-	// console.log(data[0].text);
+	var context = {};
 
-	var tweets = [];
-
-/// NOT ASYNCHORONOUS BAD... BAD.
-// SWAP OUT _ for async NOT YET... EVENTUALLY
-	_.each(data, function(t) {
-		tweets.push(t.text);
-	});
-	console.log(tweets);
-	res.render('test', {tweets: tweets});
-	});
-})
+	async.waterfall([
+		function(callback){
+        callback(null, userId);
+    },
+		getTweets,
+		runAnalysis
+	]
+	, function(err, c) { //This function gets called after the two tasks have called their "task callbacks"
+        if (err) return next(err);
+        //Here locals will be populated with context and tweets
+        console.log("\n=======\n");
+        console.log(c);
+        res.render('test', c);
+  	}
+	);
+});
 
 //http://localhost:3000/results?tweets[username]=mjdesa
 app.get('/results', function(req, res){
@@ -113,24 +140,14 @@ app.get('/results', function(req, res){
 	});
 })
 
-// app.get('/search/:user_id', function (req, res) {
-// 	var userId = req.params.user_id;
-// 	T.get('statuses/user_timeline', { screen_name: userId, count: 50 }, function (err, data, response) {
-//
-// 		if (!err && response.statusCode == 200) {
 
-// 			this.twit.get(req.params.id)
-// 					.then( function (user_id) {
-// 						res.render('results', { tweetList: userId });		
-// 			});	
-// 		}
-// 	})
-// })
+app.get('/about', function(req,res) {
+	res.render('site/about');
+})
 
-
-// Require AlchemyAPI
-var AlchemyAPI = require('./alchemyapi');
-var alchemyapi = new AlchemyAPI();
+app.get('/contact', function(req,res) {
+	res.render('site/contact');
+})
 
 
 // app.listen(3000, function (){
